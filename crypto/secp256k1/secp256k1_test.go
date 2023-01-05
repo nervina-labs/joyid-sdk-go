@@ -13,9 +13,9 @@ func TestGetPubkey(t *testing.T) {
 	}
 }
 
-func TestVerifiSignature1(t *testing.T) {
+func TestVerifySignature1(t *testing.T) {
 	key := ImportKey("ccb083b37aa346c5ce2e1f99a687a153baa04052f26db6ab3c26d6a4cc15c5f1")
-	got := key.VerifiSignature("acba4329945ecb0e4f1db924e48a7ab27db75f36346f6b2b88e70d49a9cadeb2")
+	got := key.VerifySignature("acba4329945ecb0e4f1db924e48a7ab27db75f36346f6b2b88e70d49a9cadeb2")
 
 	want := true
 	if got != want {
@@ -23,9 +23,9 @@ func TestVerifiSignature1(t *testing.T) {
 	}
 }
 
-func TestVerifiSignature2(t *testing.T) {
+func TestVerifySignature2(t *testing.T) {
 	key, _ := GenerateKey()
-	got := key.VerifiSignature("ccb083b37aa346c5ce2e1f99a687a153baa04052f26db6ab3c26d6a4cc15c5f1")
+	got := key.VerifySignature("ccb083b37aa346c5ce2e1f99a687a153baa04052f26db6ab3c26d6a4cc15c5f1")
 
 	want := true
 	if got != want {

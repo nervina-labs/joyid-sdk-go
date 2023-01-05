@@ -48,7 +48,7 @@ func (key *Secp256r1Key) Sign(message string) string {
 	return fmt.Sprintf("%x", sigBytes)
 }
 
-func (key *Secp256r1Key) VerifiSignature(message string) bool {
+func (key *Secp256r1Key) VerifySignature(message string) bool {
 	sig := key.Sign(message)
 	r, s := new(big.Int), new(big.Int)
 	r, _ = r.SetString(sig[:64], 16)
