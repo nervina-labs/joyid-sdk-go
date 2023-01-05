@@ -1,20 +1,20 @@
-package secp256r1
+package secp256k1
 
 import (
 	"testing"
 )
 
 func TestGetPubkey(t *testing.T) {
-	key := ImportKey("4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761")
+	key := ImportKey("ccb083b37aa346c5ce2e1f99a687a153baa04052f26db6ab3c26d6a4cc15c5f1")
 	_, pubkey := key.Pubkey()
-	want := "4599a5795423d54ab8e1f44f5c6ef5be9b1829beddb787bc732e4469d25f8c93e94afa393617f905bf1765c35dc38501a862b4b2f794a88b4f9010da02411a85"
+	want := "a0a7a7597b019828a1dda6ed52ab25181073ec3a9825d28b9abbb932fe1ec83dd117a8eef7649c25be5a591d08f80ffe7e9c14100ad1b58ac78afa606a576453"
 	if got := pubkey; got != want {
 		t.Errorf("GetPubkey() = %q, want %q", got, want)
 	}
 }
 
 func TestVerifiSignature1(t *testing.T) {
-	key := ImportKey("4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761")
+	key := ImportKey("ccb083b37aa346c5ce2e1f99a687a153baa04052f26db6ab3c26d6a4cc15c5f1")
 	got := key.VerifiSignature("acba4329945ecb0e4f1db924e48a7ab27db75f36346f6b2b88e70d49a9cadeb2")
 
 	want := true
@@ -25,7 +25,7 @@ func TestVerifiSignature1(t *testing.T) {
 
 func TestVerifiSignature2(t *testing.T) {
 	key, _ := GenerateKey()
-	got := key.VerifiSignature("acba4329945ecb0e4f1db924e48a7ab27db75f36346f6b2b88e70d49a9cadeb2")
+	got := key.VerifiSignature("ccb083b37aa346c5ce2e1f99a687a153baa04052f26db6ab3c26d6a4cc15c5f1")
 
 	want := true
 	if got != want {
