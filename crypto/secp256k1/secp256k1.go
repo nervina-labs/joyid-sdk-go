@@ -7,37 +7,44 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/crypto/secp256k1"
+	"github.com/nervina-labs/joyid-sdk-go/crypto/keccak"
 )
 
-type Secp256k1Key struct {
+type Key struct {
 	PrivateKey *ecdsa.PrivateKey
 }
 
-func ImportKey(hex string) *Secp256k1Key {
+func ImportKey(privKey string) *Key {
 	privateKey := new(ecdsa.PrivateKey)
 	privateKey.Curve = secp256k1.S256()
-	privateKey.D, _ = new(big.Int).SetString(hex, 16)
-	return &Secp256k1Key{PrivateKey: privateKey}
+	privateKey.D, _ = new(big.Int).SetString(privKey, 16)
+	return &Key{PrivateKey: privateKey}
 }
 
-func GenerateKey() (*Secp256k1Key, error) {
+func GenerateKey() (*Key, error) {
 	privateKey, err := ecdsa.GenerateKey(secp256k1.S256(), rand.Reader)
 	if err != nil {
 		return nil, err
 	}
-	return &Secp256k1Key{PrivateKey: privateKey}, nil
+	return &Key{PrivateKey: privateKey}, nil
 }
 
-func (key *Secp256k1Key) Pubkey() (*ecdsa.PublicKey, string) {
+func (key *Key) Pubkey() (*ecdsa.PublicKey, []byte) {
 	pubkey := key.PrivateKey.PublicKey
 	pubkey.Curve = secp256k1.S256()
 	pubkey.X, pubkey.Y = pubkey.Curve.ScalarBaseMult(key.PrivateKey.D.Bytes())
-	pubkeyHex := pubkey.X.Text(16) + pubkey.Y.Text(16)
-	return &pubkey, pubkeyHex
+	pubkeyBytes := pubkey.X.Bytes()
+	pubkeyBytes = append(pubkeyBytes, pubkey.Y.Bytes()...)
+	return &pubkey, pubkeyBytes
 }
 
-func (key *Secp256k1Key) Sign(message string) string {
-	r, s, err := ecdsa.Sign(rand.Reader, key.PrivateKey, []byte(message))
+func (key *Key) PubkeyHash() []byte {
+	_, pubkey := key.Pubkey()
+	return keccak.Keccak160(([]byte(pubkey)))
+}
+
+func (key *Key) Sign(message []byte) string {
+	r, s, err := ecdsa.Sign(rand.Reader, key.PrivateKey, message)
 	if err != nil {
 		return ""
 	}
@@ -49,7 +56,7 @@ func (key *Secp256k1Key) Sign(message string) string {
 	return fmt.Sprintf("%x", sigBytes)
 }
 
-func (key *Secp256k1Key) VerifySignature(message string) bool {
+func (key *Key) VerifySignature(message []byte) bool {
 	sig := key.Sign(message)
 	r, s := new(big.Int), new(big.Int)
 	r, _ = r.SetString(sig[:64], 16)

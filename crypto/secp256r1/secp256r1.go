@@ -6,36 +6,43 @@ import (
 	"crypto/rand"
 	"fmt"
 	"math/big"
+
+	"github.com/nervosnetwork/ckb-sdk-go/v2/crypto/blake2b"
 )
 
-type Secp256r1Key struct {
+type Key struct {
 	PrivateKey *ecdsa.PrivateKey
 }
 
-func ImportKey(hex string) *Secp256r1Key {
+func ImportKey(privKey string) *Key {
 	privateKey := new(ecdsa.PrivateKey)
 	privateKey.Curve = elliptic.P256()
-	privateKey.D, _ = new(big.Int).SetString(hex, 16)
-	return &Secp256r1Key{PrivateKey: privateKey}
+	privateKey.D, _ = new(big.Int).SetString(privKey, 16)
+	return &Key{PrivateKey: privateKey}
 }
 
-func GenerateKey() (*Secp256r1Key, error) {
+func GenerateKey() (*Key, error) {
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	if err != nil {
 		return nil, err
 	}
-	return &Secp256r1Key{PrivateKey: privateKey}, nil
+	return &Key{PrivateKey: privateKey}, nil
 }
 
-func (key *Secp256r1Key) Pubkey() (*ecdsa.PublicKey, string) {
+func (key *Key) Pubkey() (*ecdsa.PublicKey, []byte) {
 	pubkey := key.PrivateKey.PublicKey
 	pubkey.Curve = elliptic.P256()
 	pubkey.X, pubkey.Y = pubkey.Curve.ScalarBaseMult(key.PrivateKey.D.Bytes())
 	pubkeyHex := pubkey.X.Text(16) + pubkey.Y.Text(16)
-	return &pubkey, pubkeyHex
+	return &pubkey, []byte(pubkeyHex)
 }
 
-func (key *Secp256r1Key) Sign(message string) string {
+func (key *Key) PubkeyHash() []byte {
+	_, pubkey := key.Pubkey()
+	return blake2b.Blake160([]byte(pubkey))
+}
+
+func (key *Key) Sign(message string) string {
 	r, s, err := ecdsa.Sign(rand.Reader, key.PrivateKey, []byte(message))
 	if err != nil {
 		return ""
@@ -48,7 +55,7 @@ func (key *Secp256r1Key) Sign(message string) string {
 	return fmt.Sprintf("%x", sigBytes)
 }
 
-func (key *Secp256r1Key) VerifySignature(message string) bool {
+func (key *Key) VerifySignature(message string) bool {
 	sig := key.Sign(message)
 	r, s := new(big.Int), new(big.Int)
 	r, _ = r.SetString(sig[:64], 16)
