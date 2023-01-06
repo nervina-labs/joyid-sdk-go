@@ -19,10 +19,10 @@ type RPCClient struct {
 }
 
 type request struct {
-	Id      int            `json:"id"`
-	JsonRpc string         `json:"jsonrpc"`
-	Method  string         `json:"method"`
-	Params  map[string]any `json:"params"`
+	Id      int                    `json:"id"`
+	JsonRpc string                 `json:"jsonrpc"`
+	Method  string                 `json:"method"`
+	Params  map[string]interface{} `json:"params"`
 }
 
 type rpcError struct {
