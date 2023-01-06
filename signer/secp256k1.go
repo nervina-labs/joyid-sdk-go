@@ -7,7 +7,6 @@ import (
 
 	"github.com/nervina-labs/joyid-sdk-go/crypto/keccak"
 	"github.com/nervina-labs/joyid-sdk-go/crypto/secp256k1"
-	"github.com/nervosnetwork/ckb-sdk-go/v2/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/v2/types"
 )
 
@@ -35,17 +34,17 @@ func SignSecp25k1Tx(tx *types.Transaction, key *secp256k1.Key, mode unlockMode) 
 	if err != nil {
 		return errors.New("first witness must be WitnessArgs")
 	}
-	firstWitness := types.WitnessArgs{
+	emptyWitness := types.WitnessArgs{
 		Lock:       make([]byte, secp256k1EmptyWitnessLockLen),
 		InputType:  firstWitnessArgs.InputType,
 		OutputType: firstWitnessArgs.OutputType,
 	}
-	firstWitnessBytes := firstWitness.Serialize()
+	emptyWitnessBytes := emptyWitness.Serialize()
 
 	bytesLen := make([]byte, 8)
-	binary.LittleEndian.PutUint64(bytesLen, uint64(len(firstWitnessBytes)))
+	binary.LittleEndian.PutUint64(bytesLen, uint64(len(emptyWitnessBytes)))
 	msg = append(msg, bytesLen...)
-	msg = append(msg, firstWitnessBytes...)
+	msg = append(msg, emptyWitnessBytes...)
 
 	for i := 1; i < len(witnesses); i++ {
 		bytes := tx.Witnesses[i]
@@ -55,7 +54,7 @@ func SignSecp25k1Tx(tx *types.Transaction, key *secp256k1.Key, mode unlockMode) 
 		msg = append(msg, bytes...)
 	}
 
-	msgHash, err := blake2b.Blake256(msg)
+	msgHash := keccak.Keccak256(msg)
 	if err != nil {
 		return err
 	}
@@ -64,10 +63,8 @@ func SignSecp25k1Tx(tx *types.Transaction, key *secp256k1.Key, mode unlockMode) 
 	_, pubkey := key.Pubkey()
 	pubkeyHash := keccak.Keccak160([]byte(pubkey))
 
-	firstWitness.Lock = []byte(fmt.Sprintf("%x%x%s", mode, pubkeyHash, signature))
-
-	signedWitnesses := [][]byte{firstWitness.Serialize()}
-	tx.Witnesses = append(signedWitnesses, witnesses[1:]...)
+	emptyWitness.Lock = []byte(fmt.Sprintf("%x%x%s", mode, pubkeyHash, signature))
+	tx.Witnesses[0] = emptyWitness.Serialize()
 
 	return nil
 }

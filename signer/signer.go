@@ -27,16 +27,16 @@ type AlgPrivKey struct {
 	Alg     alg.AlgIndex
 }
 
-func SignNativeUnlockTx(tx *types.Transaction, algKey AlgPrivKey) error {
+func SignNativeUnlockTx(tx *types.Transaction, algKey AlgPrivKey, webAuthn *WebAuthnMsg) error {
 	if algKey.Alg == alg.Secp256r1 {
 		key := secp256r1.ImportKey(algKey.PrivKey)
-		return signSecp256r1Tx(tx, key, native)
+		return signSecp256r1Tx(tx, key, native, webAuthn)
 	}
 	key := secp256k1.ImportKey(algKey.PrivKey)
 	return SignSecp25k1Tx(tx, key, native)
 }
 
-func SignSubkeyUnlockTx(tx *types.Transaction, algKey AlgPrivKey, addr *address.Address) error {
+func SignSubkeyUnlockTx(tx *types.Transaction, algKey AlgPrivKey, addr *address.Address, webAuthn *WebAuthnMsg) error {
 	pubkeyHash := secp256r1.ImportKey(algKey.PrivKey).PubkeyHash()
 	rpc := aggregator.NewRPCClient(testnetAggregatorUrl)
 	if addr.Network == types.NetworkMain {
@@ -63,7 +63,7 @@ func SignSubkeyUnlockTx(tx *types.Transaction, algKey AlgPrivKey, addr *address.
 
 	if algKey.Alg == alg.Secp256r1 {
 		key := secp256r1.ImportKey(algKey.PrivKey)
-		return signSecp256r1Tx(tx, key, subkey)
+		return signSecp256r1Tx(tx, key, subkey, webAuthn)
 	}
 	key := secp256k1.ImportKey(algKey.PrivKey)
 	return SignSecp25k1Tx(tx, key, subkey)
