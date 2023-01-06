@@ -4,7 +4,6 @@ go 1.19
 
 require (
 	github.com/ethereum/go-ethereum v1.10.26
-	github.com/nervosnetwork/ckb-sdk-go v1.0.4
 	github.com/nervosnetwork/ckb-sdk-go/v2 v2.1.0
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 )

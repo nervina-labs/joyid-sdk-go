@@ -3,8 +3,6 @@ github.com/ethereum/go-ethereum v1.10.26 h1:i/7d9RBBwiXCEuyduBQzJw/mKmnvzsN14jqB
 github.com/ethereum/go-ethereum v1.10.26/go.mod h1:EYFyF19u3ezGLD4RqOkLq+ZCXzYbLoNDdZlMt7kyKFg=
 github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1 h1:lYpkrQH5ajf0OXOcUbGjvZxxijuBwbbmlSxLiuofa+g=
 github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1/go.mod h1:pD8RvIylQ358TN4wwqatJ8rNavkEINozVn9DtGI3dfQ=
-github.com/nervosnetwork/ckb-sdk-go v1.0.4 h1:wKOFLYAoxdrOIMuFBazK+eyymBteOFZ7oQoepki5x4Y=
-github.com/nervosnetwork/ckb-sdk-go v1.0.4/go.mod h1:tvBAWklqDDKjtweIrvQ3WQxYYn5B1UpAK1CX7KKlUVc=
 github.com/nervosnetwork/ckb-sdk-go/v2 v2.1.0 h1:HPBklH3ce9RQu/VzZoCGHmYmBSl5iHWXtfvbpfqjfi4=
 github.com/nervosnetwork/ckb-sdk-go/v2 v2.1.0/go.mod h1:Q5XychQmHKLhcsvV7+pwB5PTrGoQoAfreFO4FOlvQTA=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

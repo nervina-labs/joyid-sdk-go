@@ -7,7 +7,7 @@ import (
 
 	"github.com/nervina-labs/joyid-sdk-go/crypto/keccak"
 	"github.com/nervina-labs/joyid-sdk-go/crypto/secp256k1"
-	"github.com/nervosnetwork/ckb-sdk-go/crypto/blake2b"
+	"github.com/nervosnetwork/ckb-sdk-go/v2/crypto/blake2b"
 	"github.com/nervosnetwork/ckb-sdk-go/v2/types"
 )
 
