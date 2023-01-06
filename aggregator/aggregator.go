@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/nervina-labs/joyid-sdk-go/crypto/alg"
+	"github.com/nervina-labs/joyid-sdk-go/utils"
 	"github.com/nervosnetwork/ckb-sdk-go/v2/address"
 )
 
@@ -50,9 +51,9 @@ func NewRPCClient(url string) *RPCClient {
 }
 
 func (rpc *RPCClient) GetSubkeyUnlockSmt(address *address.Address, pubkeyHash []byte, algIndex alg.AlgIndex) (string, error) {
-	params := make(map[string]any)
-	params["lock_script"] = address.Script.Serialize()
-	params["pubkey_hash"] = fmt.Sprintf("%x", pubkeyHash)
+	params := make(map[string]interface{})
+	params["lock_script"] = utils.BytesToHex(address.Script.Serialize())
+	params["pubkey_hash"] = utils.BytesToHex(pubkeyHash)
 	params["alg_index"] = algIndex
 
 	req := request{
