@@ -33,8 +33,9 @@ func (key *Key) Pubkey() (*ecdsa.PublicKey, []byte) {
 	pubkey := key.PrivateKey.PublicKey
 	pubkey.Curve = elliptic.P256()
 	pubkey.X, pubkey.Y = pubkey.Curve.ScalarBaseMult(key.PrivateKey.D.Bytes())
-	pubkeyHex := pubkey.X.Text(16) + pubkey.Y.Text(16)
-	return &pubkey, []byte(pubkeyHex)
+	pubkeyBytes := pubkey.X.Bytes()
+	pubkeyBytes = append(pubkeyBytes, pubkey.Y.Bytes()...)
+	return &pubkey, pubkeyBytes
 }
 
 func (key *Key) PubkeyHash() []byte {
