@@ -3,15 +3,19 @@ package secp256k1
 import (
 	"crypto/ecdsa"
 	"crypto/rand"
-	"fmt"
 	"math/big"
 
+	"github.com/ethereum/go-ethereum/common/math"
 	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 	"github.com/nervina-labs/joyid-sdk-go/crypto/keccak"
 )
 
 type Key struct {
 	PrivateKey *ecdsa.PrivateKey
+}
+
+func (k *Key) Bytes() []byte {
+	return math.PaddedBigBytes(k.PrivateKey.D, k.PrivateKey.Params().BitSize/8)
 }
 
 func ImportKey(privKey string) *Key {
@@ -40,27 +44,13 @@ func (key *Key) Pubkey() (*ecdsa.PublicKey, []byte) {
 
 func (key *Key) PubkeyHash() []byte {
 	_, pubkey := key.Pubkey()
-	return keccak.Keccak160(([]byte(pubkey)))
+	return keccak.Keccak160((pubkey))
 }
 
-func (key *Key) Sign(message []byte) string {
-	r, s, err := ecdsa.Sign(rand.Reader, key.PrivateKey, message)
+func (key *Key) Sign(message []byte) []byte {
+	sig, err := secp256k1.Sign(message, key.Bytes())
 	if err != nil {
-		return ""
+		return []byte{}
 	}
-	rBytes := r.Bytes()
-	sBytes := s.Bytes()
-	sigBytes := make([]byte, 64)
-	copy(sigBytes[32-len(rBytes):32], rBytes)
-	copy(sigBytes[64-len(sBytes):64], sBytes)
-	return fmt.Sprintf("%x", sigBytes)
-}
-
-func (key *Key) VerifySignature(message []byte) bool {
-	sig := key.Sign(message)
-	r, s := new(big.Int), new(big.Int)
-	r, _ = r.SetString(sig[:64], 16)
-	s, _ = s.SetString(sig[64:], 16)
-	pubkey, _ := key.Pubkey()
-	return ecdsa.Verify(pubkey, []byte(message), r, s)
+	return sig
 }

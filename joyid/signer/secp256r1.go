@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/nervina-labs/joyid-sdk-go/crypto/secp256r1"
 	"github.com/nervina-labs/joyid-sdk-go/crypto/sha256"
 	"github.com/nervina-labs/joyid-sdk-go/utils"
@@ -53,20 +54,30 @@ func GenerateWebAuthnChallenge(tx *types.Transaction) (string, error) {
 		msg = append(msg, bytesLen...)
 		msg = append(msg, bytes...)
 	}
-
 	msgHash := blake2b.Blake256(msg)
+	msgHashHex := utils.BytesToHex(msgHash)
+
 	if err != nil {
 		return "", err
 	}
 	challenge := make([]byte, 86)
-	base64.StdEncoding.Encode(challenge, msgHash)
+	base64.RawURLEncoding.Encode(challenge, []byte(msgHashHex))
 	return utils.BytesToHex(challenge), nil
 }
 
-func signSecp256r1Tx(tx *types.Transaction, key *secp256r1.Key, mode unlockMode, webAuthn *WebAuthnMsg) error {
-	clientDataHash := sha256.Sha256([]byte(webAuthn.ClientData))
-	signData := fmt.Sprintf("%s%s", webAuthn.AuthData, clientDataHash)
-	signature := key.Sign(signData)
+func signSecp256r1Tx(tx *types.Transaction, key *secp256r1.Key, mode byte, webAuthn *WebAuthnMsg) error {
+	clientDataBytes, err := hexutil.Decode(fmt.Sprintf("0x%s", webAuthn.ClientData))
+	if err != nil {
+		return errors.New("hex convert error")
+	}
+	clientDataHash := sha256.Sha256(clientDataBytes)
+	authData, err := hexutil.Decode(fmt.Sprintf("0x%s", webAuthn.AuthData))
+	if err != nil {
+		return errors.New("hex convert error")
+	}
+	signData := authData
+	signData = append(signData, clientDataHash...)
+	signature := key.Sign(sha256.Sha256(signData))
 	_, pubkey := key.Pubkey()
 
 	if len(tx.Witnesses) < 1 {
@@ -76,8 +87,15 @@ func signSecp256r1Tx(tx *types.Transaction, key *secp256r1.Key, mode unlockMode,
 	if err != nil {
 		return errors.New("first witness must be WitnessArgs")
 	}
-	firstWitnessArgs.Lock = []byte(fmt.Sprintf("%x%s%s%s%s", mode, pubkey, signature, webAuthn.AuthData, webAuthn.ClientData))
-
+	witnessArgsLock := []byte{mode}
+	witnessArgsLock = append(witnessArgsLock, pubkey...)
+	witnessArgsLock = append(witnessArgsLock, signature...)
+	witnessArgsLock = append(witnessArgsLock, authData...)
+	witnessArgsLock = append(witnessArgsLock, clientDataBytes...)
+	firstWitnessArgs.Lock = witnessArgsLock
+	if err != nil {
+		return errors.New("hex convert error")
+	}
 	tx.Witnesses[0] = firstWitnessArgs.Serialize()
 	return nil
 }

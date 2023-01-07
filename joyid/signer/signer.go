@@ -12,11 +12,9 @@ import (
 	"github.com/nervosnetwork/ckb-sdk-go/v2/types"
 )
 
-type unlockMode uint8
-
 const (
-	native unlockMode = 1
-	subkey unlockMode = 2
+	native byte = 1
+	subkey byte = 2
 
 	testnetAggregatorUrl = "https://cota.nervina.dev/aggregator"
 	mainnetAggreagtorUrl = "https://cota.nervina.dev/mainnet-aggregator"

@@ -3,7 +3,6 @@ package signer
 import (
 	"encoding/binary"
 	"errors"
-	"fmt"
 
 	"github.com/nervina-labs/joyid-sdk-go/crypto/keccak"
 	"github.com/nervina-labs/joyid-sdk-go/crypto/secp256k1"
@@ -15,7 +14,7 @@ const (
 	secp256k1EmptyWitnessLockLen = 86
 )
 
-func SignSecp25k1Tx(tx *types.Transaction, key *secp256k1.Key, mode unlockMode) error {
+func SignSecp25k1Tx(tx *types.Transaction, key *secp256k1.Key, mode byte) error {
 	// personal hash, ethereum prefix  \u0019Ethereum Signed Message:\n32
 	personalEthereumSignPrefix := [...]byte{
 		0x19, 0x45, 0x74, 0x68, 0x65, 0x72, 0x65, 0x75, 0x6d, 0x20, 0x53, 0x69, 0x67, 0x6e, 0x65, 0x64,
@@ -61,10 +60,12 @@ func SignSecp25k1Tx(tx *types.Transaction, key *secp256k1.Key, mode unlockMode) 
 
 	signature := key.Sign(msgHash)
 	_, pubkey := key.Pubkey()
-	pubkeyHash := keccak.Keccak160([]byte(pubkey))
+	pubkeyHash := keccak.Keccak160(pubkey)
 
-	emptyWitness.Lock = []byte(fmt.Sprintf("%x%x%s", mode, pubkeyHash, signature))
-	tx.Witnesses[0] = emptyWitness.Serialize()
-
+	witnessArgsLock := []byte{mode}
+	witnessArgsLock = append(witnessArgsLock, pubkeyHash...)
+	witnessArgsLock = append(witnessArgsLock, signature...)
+	firstWitnessArgs.Lock = witnessArgsLock
+	tx.Witnesses[0] = firstWitnessArgs.Serialize()
 	return nil
 }

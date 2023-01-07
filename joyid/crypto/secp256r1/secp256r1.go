@@ -4,7 +4,6 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
-	"fmt"
 	"math/big"
 
 	"github.com/nervosnetwork/ckb-sdk-go/v2/crypto/blake2b"
@@ -40,27 +39,27 @@ func (key *Key) Pubkey() (*ecdsa.PublicKey, []byte) {
 
 func (key *Key) PubkeyHash() []byte {
 	_, pubkey := key.Pubkey()
-	return blake2b.Blake160([]byte(pubkey))
+	return blake2b.Blake160(pubkey)
 }
 
-func (key *Key) Sign(message string) string {
-	r, s, err := ecdsa.Sign(rand.Reader, key.PrivateKey, []byte(message))
+func (key *Key) Sign(message []byte) []byte {
+	r, s, err := ecdsa.Sign(rand.Reader, key.PrivateKey, message)
 	if err != nil {
-		return ""
+		return []byte{}
 	}
 	rBytes := r.Bytes()
 	sBytes := s.Bytes()
 	sigBytes := make([]byte, 64)
 	copy(sigBytes[32-len(rBytes):32], rBytes)
 	copy(sigBytes[64-len(sBytes):64], sBytes)
-	return fmt.Sprintf("%x", sigBytes)
+	return sigBytes
 }
 
-func (key *Key) VerifySignature(message string) bool {
+func (key *Key) VerifySignature(message []byte) bool {
 	sig := key.Sign(message)
 	r, s := new(big.Int), new(big.Int)
-	r, _ = r.SetString(sig[:64], 16)
-	s, _ = s.SetString(sig[64:], 16)
+	r = r.SetBytes(sig[:32])
+	s = s.SetBytes(sig[32:])
 	pubkey, _ := key.Pubkey()
-	return ecdsa.Verify(pubkey, []byte(message), r, s)
+	return ecdsa.Verify(pubkey, message, r, s)
 }

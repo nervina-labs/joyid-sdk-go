@@ -3,6 +3,8 @@ package secp256k1
 import (
 	"fmt"
 	"testing"
+
+	"github.com/ethereum/go-ethereum/common/hexutil"
 )
 
 func TestGetPubkey(t *testing.T) {
@@ -16,20 +18,11 @@ func TestGetPubkey(t *testing.T) {
 
 func TestVerifySignature1(t *testing.T) {
 	key := ImportKey("ccb083b37aa346c5ce2e1f99a687a153baa04052f26db6ab3c26d6a4cc15c5f1")
-	got := key.VerifySignature([]byte("acba4329945ecb0e4f1db924e48a7ab27db75f36346f6b2b88e70d49a9cadeb2"))
+	message, _ := hexutil.Decode("0xacba4329945ecb0e4f1db924e48a7ab27db75f36346f6b2b88e70d49a9cadeb2")
+	got := hexutil.Encode(key.Sign(message))
 
-	want := true
+	want := "0x692dc94fdaf9d9dded7cad66755da9cb79ec918f7bb69b4939a9ce1ac41c6589750d48ace8bc766531312c4ee36d9ec2a94921adb9f391ddde47a44baae6e8f000"
 	if got != want {
-		t.Errorf("VerifiSignature() = %t, want %t", got, want)
-	}
-}
-
-func TestVerifySignature2(t *testing.T) {
-	key, _ := GenerateKey()
-	got := key.VerifySignature([]byte("ccb083b37aa346c5ce2e1f99a687a153baa04052f26db6ab3c26d6a4cc15c5f1"))
-
-	want := true
-	if got != want {
-		t.Errorf("VerifiSignature() = %t, want %t", got, want)
+		t.Errorf("VerifiSignature() = %s, want %s", got, want)
 	}
 }
