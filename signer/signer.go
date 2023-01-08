@@ -31,7 +31,7 @@ func SignNativeUnlockTx(tx *types.Transaction, algKey AlgPrivKey, webAuthn *WebA
 		return signSecp256r1Tx(tx, key, native, webAuthn)
 	}
 	key := secp256k1.ImportKey(algKey.PrivKey)
-	return SignSecp25k1Tx(tx, key, native)
+	return signSecp25k1Tx(tx, key, native)
 }
 
 func SignSubkeyUnlockTx(tx *types.Transaction, algKey AlgPrivKey, addr *address.Address, webAuthn *WebAuthnMsg) error {
@@ -64,5 +64,5 @@ func SignSubkeyUnlockTx(tx *types.Transaction, algKey AlgPrivKey, addr *address.
 		return signSecp256r1Tx(tx, key, subkey, webAuthn)
 	}
 	key := secp256k1.ImportKey(algKey.PrivKey)
-	return SignSecp25k1Tx(tx, key, subkey)
+	return signSecp25k1Tx(tx, key, subkey)
 }
