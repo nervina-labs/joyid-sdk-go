@@ -40,6 +40,17 @@ type SubKeyUnlockResp struct {
 	Error  rpcError           `json:"error,omitempty"`
 }
 
+type ExtensionSubKeyResult struct {
+	ExtensionSmtEntry string `json:"extension_smt_entry"`
+	SmtRootHash       string `json:"smt_root_hash"`
+	BlockNumber       uint64 `json:"block_number"`
+}
+
+type ExtensionSubKeyResp struct {
+	Result ExtensionSubKeyResult `json:"result,omitempty"`
+	Error  rpcError              `json:"error,omitempty"`
+}
+
 func NewRPCClient(url string) *RPCClient {
 	client := &http.Client{
 		Timeout: time.Duration(1) * time.Minute,
@@ -101,4 +112,62 @@ func (rpc *RPCClient) GetSubkeyUnlockSmt(address *address.Address, pubkeyHash []
 	}
 
 	return "", fmt.Errorf("invalid aggregator request, %v", err)
+}
+
+func (rpc *RPCClient) GetExtensionSubkeySmt(address *address.Address, pubkeyHash []byte, algIndex alg.AlgIndex, extData uint32) (*ExtensionSubKeyResult, error) {
+	subkey := make(map[string]interface{})
+	subkey["ext_data"] = extData
+	subkey["alg_index"] = algIndex
+	subkey["pubkey_hash"] = hexutil.Encode(pubkeyHash)
+
+	params := make(map[string]interface{})
+	params["lock_script"] = hexutil.Encode(address.Script.Serialize())
+	params["ext_action"] = "0xF0"
+	params["subkeys"] = []map[string]interface{}{subkey}
+
+	req := request{
+		Id:      1,
+		JsonRpc: "2.0",
+		Method:  "generate_extension_subkey_smt",
+		Params:  params,
+	}
+
+	jsonReq, err := json.Marshal(req)
+	if err != nil {
+		return nil, err
+	}
+
+	httpReq, err := http.NewRequest(http.MethodPost, rpc.url, bytes.NewBuffer(jsonReq))
+	if err != nil {
+		return nil, err
+	}
+
+	httpReq.Header.Set("Content-Type", "application/json")
+
+	resp, err := rpc.client.Do(httpReq)
+	if err != nil {
+		return nil, fmt.Errorf("aggregator node is not reachable, %+v", err)
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
+		responseBody, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+
+		var resp ExtensionSubKeyResp
+		if err = json.Unmarshal(responseBody, &resp); err != nil { // Parse []byte to the go struct pointer
+			return nil, err
+		}
+
+		if resp.Error.Code != 0 {
+			return nil, fmt.Errorf("aggregator request error, %v", resp.Error.Message)
+		}
+
+		return &resp.Result, nil
+	}
+
+	return nil, fmt.Errorf("invalid aggregator request, %v", err)
 }
