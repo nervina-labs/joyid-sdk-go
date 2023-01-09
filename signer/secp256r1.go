@@ -4,9 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/binary"
 	"errors"
-	"fmt"
 
-	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/nervina-labs/joyid-sdk-go/crypto/secp256r1"
 	"github.com/nervina-labs/joyid-sdk-go/crypto/sha256"
 	"github.com/nervina-labs/joyid-sdk-go/utils"
@@ -66,12 +64,12 @@ func GenerateWebAuthnChallenge(tx *types.Transaction) (string, error) {
 }
 
 func signSecp256r1Tx(tx *types.Transaction, key *secp256r1.Key, mode byte, webAuthn *WebAuthnMsg) error {
-	clientDataBytes, err := hexutil.Decode(fmt.Sprintf("0x%s", webAuthn.ClientData))
+	clientDataBytes, err := utils.HexToBytes(webAuthn.ClientData)
 	if err != nil {
 		return errors.New("hex convert error")
 	}
 	clientDataHash := sha256.Sha256(clientDataBytes)
-	authData, err := hexutil.Decode(fmt.Sprintf("0x%s", webAuthn.AuthData))
+	authData, err := utils.HexToBytes(webAuthn.AuthData)
 	if err != nil {
 		return errors.New("hex convert error")
 	}

@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/nervina-labs/joyid-sdk-go/crypto/alg"
+	"github.com/nervina-labs/joyid-sdk-go/utils"
 	"github.com/nervosnetwork/ckb-sdk-go/v2/address"
 )
 
@@ -63,8 +63,8 @@ func NewRPCClient(url string) *RPCClient {
 
 func (rpc *RPCClient) GetSubkeyUnlockSmt(address *address.Address, pubkeyHash []byte, algIndex alg.AlgIndex) (string, error) {
 	params := make(map[string]interface{})
-	params["lock_script"] = hexutil.Encode(address.Script.Serialize())
-	params["pubkey_hash"] = hexutil.Encode(pubkeyHash)
+	params["lock_script"] = utils.BytesTo0xHex(address.Script.Serialize())
+	params["pubkey_hash"] = utils.BytesTo0xHex(pubkeyHash)
 	params["alg_index"] = algIndex
 
 	req := request{
@@ -118,10 +118,10 @@ func (rpc *RPCClient) GetExtensionSubkeySmt(address *address.Address, pubkeyHash
 	subkey := make(map[string]interface{})
 	subkey["ext_data"] = extData
 	subkey["alg_index"] = algIndex
-	subkey["pubkey_hash"] = hexutil.Encode(pubkeyHash)
+	subkey["pubkey_hash"] = utils.BytesTo0xHex(pubkeyHash)
 
 	params := make(map[string]interface{})
-	params["lock_script"] = hexutil.Encode(address.Script.Serialize())
+	params["lock_script"] = utils.BytesTo0xHex(address.Script.Serialize())
 	params["ext_action"] = "0xF0"
 	params["subkeys"] = []map[string]interface{}{subkey}
 

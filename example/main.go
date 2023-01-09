@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/nervosnetwork/ckb-sdk-go/v2/address"
 	"github.com/nervosnetwork/ckb-sdk-go/v2/collector"
 	"github.com/nervosnetwork/ckb-sdk-go/v2/collector/builder"
@@ -20,7 +19,7 @@ import (
 )
 
 func main() {
-	if err := SubkeyTransferWithK1(); err != nil {
+	if err := SubkeyTransferWithR1(); err != nil {
 		fmt.Printf("main error: %v", err)
 	}
 }
@@ -74,7 +73,7 @@ func NativeTransferWithR1() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("the tx hash of secp256r1 native unlock transfer: " + hexutil.Encode(hash.Bytes()))
+	fmt.Println("the tx hash of secp256r1 native unlock transfer: " + utils.BytesTo0xHex(hash.Bytes()))
 	return nil
 }
 
@@ -122,7 +121,7 @@ func NativeTransferWithK1() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("the tx hash of secp256k1 native unlock transfer: " + hexutil.Encode(hash.Bytes()))
+	fmt.Println("the tx hash of secp256k1 native unlock transfer: " + utils.BytesTo0xHex(hash.Bytes()))
 	return nil
 }
 
@@ -191,7 +190,7 @@ func SubkeyTransferWithR1() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("the tx hash of secp256r1 subkey unlock transfer: " + hexutil.Encode(hash.Bytes()))
+	fmt.Println("the tx hash of secp256r1 subkey unlock transfer: " + utils.BytesTo0xHex(hash.Bytes()))
 	return nil
 }
 
@@ -254,7 +253,7 @@ func SubkeyTransferWithK1() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("the tx hash of secp256k1 subkey unlock transfer: " + hexutil.Encode(hash.Bytes()))
+	fmt.Println("the tx hash of secp256k1 subkey unlock transfer: " + utils.BytesTo0xHex(hash.Bytes()))
 	return nil
 }
 
@@ -338,7 +337,7 @@ func AddSecp256r1SubkeyWithNativeUnlock() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("the tx hash of adding extension secp256r1 subkey with secp256r1 native unlock: " + hexutil.Encode(hash.Bytes()))
+	fmt.Println("the tx hash of adding extension secp256r1 subkey with secp256r1 native unlock: " + utils.BytesTo0xHex(hash.Bytes()))
 	return nil
 }
 
@@ -418,7 +417,7 @@ func AddSecp256k1SubkeyWithNativeUnlock() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("the tx hash of adding extension secp256k1 subkey with secp256k1 native unlock: " + hexutil.Encode(hash.Bytes()))
+	fmt.Println("the tx hash of adding extension secp256k1 subkey with secp256k1 native unlock: " + utils.BytesTo0xHex(hash.Bytes()))
 	return nil
 }
 

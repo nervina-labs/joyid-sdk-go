@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/nervina-labs/joyid-sdk-go/utils"
 )
 
 func TestGetPubkey(t *testing.T) {
@@ -18,8 +18,8 @@ func TestGetPubkey(t *testing.T) {
 
 func TestVerifySignature1(t *testing.T) {
 	key := ImportKey("ccb083b37aa346c5ce2e1f99a687a153baa04052f26db6ab3c26d6a4cc15c5f1")
-	message, _ := hexutil.Decode("0xacba4329945ecb0e4f1db924e48a7ab27db75f36346f6b2b88e70d49a9cadeb2")
-	got := hexutil.Encode(key.Sign(message))
+	message, _ := utils.HexToBytes("0xacba4329945ecb0e4f1db924e48a7ab27db75f36346f6b2b88e70d49a9cadeb2")
+	got := utils.BytesTo0xHex(key.Sign(message))
 
 	want := "0x692dc94fdaf9d9dded7cad66755da9cb79ec918f7bb69b4939a9ce1ac41c6589750d48ace8bc766531312c4ee36d9ec2a94921adb9f391ddde47a44baae6e8f000"
 	if got != want {

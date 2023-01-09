@@ -2,13 +2,12 @@ package signer
 
 import (
 	"errors"
-	"fmt"
 
-	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/nervina-labs/joyid-sdk-go/aggregator"
 	"github.com/nervina-labs/joyid-sdk-go/crypto/alg"
 	"github.com/nervina-labs/joyid-sdk-go/crypto/secp256k1"
 	"github.com/nervina-labs/joyid-sdk-go/crypto/secp256r1"
+	"github.com/nervina-labs/joyid-sdk-go/utils"
 	"github.com/nervosnetwork/ckb-sdk-go/v2/address"
 	"github.com/nervosnetwork/ckb-sdk-go/v2/types"
 )
@@ -71,7 +70,7 @@ func BuildOutputTypeWithSubkeySmt(tx *types.Transaction, algKey AlgPrivKey, addr
 	if err != nil {
 		return errors.New("first witness must be WitnessArgs")
 	}
-	unlockBytes, err := hexutil.Decode(fmt.Sprintf("0x%s", unlockSmt))
+	unlockBytes, err := utils.HexToBytes(unlockSmt)
 
 	if err != nil {
 		return errors.New("hex convert error")
