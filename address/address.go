@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	joyidCodeHash = "d23761b364210735c19c60561d213fb3beae2fd6172743719eff6920e020baac"
+	testnetJoyidCodeHash = "0x07595bf3a836bdb7f93a91a66cb2c8cbaf0d807e8adecddc9d910aac6f0a5d0f"
+	mainnetJoyidCodeHash = "0x07595bf3a836bdb7f93a91a66cb2c8cbaf0d807e8adecddc9d910aac6f0a5d0f"
 )
 
 func FromPubkeyHash(pubkeyHash []byte, algIndex alg.AlgIndex, network types.Network) *address.Address {
@@ -20,8 +21,14 @@ func FromPubkeyHash(pubkeyHash []byte, algIndex alg.AlgIndex, network types.Netw
 		args = []byte{0x00, 0x02}
 	}
 	args = append(args, pubkeyHash...)
+	var codeHash string
+	if network == types.NetworkTest {
+		codeHash = testnetJoyidCodeHash
+	} else {
+		codeHash = mainnetJoyidCodeHash
+	}
 	lockScript := &types.Script{
-		CodeHash: types.HexToHash(joyidCodeHash),
+		CodeHash: types.HexToHash(codeHash),
 		HashType: types.HashTypeType,
 		Args:     args,
 	}
