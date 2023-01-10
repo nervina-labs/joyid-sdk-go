@@ -1,6 +1,6 @@
 # joyid-sdk-go
 
-The go sdk of [JoyID Lock Script Demo with dynamic link library joyid.so](https://github.com/nervina-labs/joyid-lib-demo) and the contract deployment can be seen in [wiki-testnet-deployment](https://github.com/nervina-labs/joyid-lib-demo/wiki/Testnet-Deployment)
+The Go SDK of [JoyID Lock Script Demo with dynamic link library joyid.so](https://github.com/nervina-labs/joyid-lib-demo) and the contract deployment can be seen in [wiki-testnet-deployment](https://github.com/nervina-labs/joyid-lib-demo/wiki/Testnet-Deployment)
 
 ## Install
 
@@ -30,6 +30,10 @@ func NativeTransferWithK1() error
 
 ### JoyID subkey unlock
 
+Before using subkey to unlock transaction, the CoTA cell should be registerd and the [registry example](https://github.com/nervina-labs/cota-sdk-js/blob/develop/example/registry.ts) may be helpful.
+
+> The community cota aggregator services may be helpful to develop and they can be seen on [here](https://github.com/nervina-labs/cota-sdk-js#public-aggregator-rpc-url-as-blow-can-be-used-to-develop-and-test)
+
 - **Secp256r1(WebAuthn)**
 
 ```go
@@ -45,6 +49,10 @@ func SubkeyTransferWithK1() error
 ```
 
 ### Add subkey with native unlock
+
+Before adding subkey to JoyID account, the CoTA cell should be registerd and the [registry example](https://github.com/nervina-labs/cota-sdk-js/blob/develop/example/registry.ts) may be helpful.
+
+> The community cota aggregator services may be helpful to develop and they can be seen on [here](https://github.com/nervina-labs/cota-sdk-js#public-aggregator-rpc-url-as-blow-can-be-used-to-develop-and-test)
 
 - **Secp256r1(WebAuthn)**
 
