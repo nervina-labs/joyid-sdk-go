@@ -18,8 +18,14 @@ import (
 	"github.com/nervina-labs/joyid-sdk-go/utils"
 )
 
+const (
+	testnetCkbNodeUrl    = "https://testnet.ckb.dev/rpc"
+	testnetCkbIndexerUrl = "https://testnet.ckb.dev/indexer"
+	testnetAggregatorUrl = "https://cota.nervina.dev/aggregator"
+)
+
 func main() {
-	if err := SubkeyTransferWithR1(); err != nil {
+	if err := SubkeyTransferWithK1(); err != nil {
 		fmt.Printf("main error: %v", err)
 	}
 }
@@ -174,7 +180,7 @@ func SubkeyTransferWithR1() error {
 		PrivKey: senderSubkeyPrivKey,
 		Alg:     alg.Secp256r1,
 	}
-	signer.BuildOutputTypeWithSubkeySmt(tx, algKey, senderAddr)
+	signer.BuildOutputTypeWithSubkeySmt(tx, algKey, senderAddr, testnetAggregatorUrl)
 
 	// Build webAuthn message
 	webAuthnMsg, err := generateWebAuthnMsg(tx)
@@ -243,7 +249,7 @@ func SubkeyTransferWithK1() error {
 		PrivKey: senderSubkeyPrivKey,
 		Alg:     alg.Secp256k1,
 	}
-	signer.BuildOutputTypeWithSubkeySmt(tx, algKey, senderAddr)
+	signer.BuildOutputTypeWithSubkeySmt(tx, algKey, senderAddr, testnetAggregatorUrl)
 
 	// Sign transaction
 	signer.SignSubkeyUnlockTx(tx, algKey, nil)
@@ -289,7 +295,7 @@ func AddSecp256r1SubkeyWithNativeUnlock() error {
 		Type:     cotaCell.Output.Type,
 	}
 
-	rpc := aggregator.NewRPCClient("http://127.0.0.1:3030")
+	rpc := aggregator.NewRPCClient(testnetAggregatorUrl)
 	pubkeyHash := secp256r1.ImportKey(senderSubkeyPrivKey).PubkeyHash()
 	extensionSubkeySmt, err := rpc.GetExtensionSubkeySmt(senderAddr, pubkeyHash, alg.Secp256r1, 1)
 	if err != nil {
@@ -373,7 +379,7 @@ func AddSecp256k1SubkeyWithNativeUnlock() error {
 		Type:     cotaCell.Output.Type,
 	}
 
-	rpc := aggregator.NewRPCClient("http://127.0.0.1:3030")
+	rpc := aggregator.NewRPCClient(testnetAggregatorUrl)
 	pubkeyHash := secp256k1.ImportKey(senderSubkeyPrivKey).PubkeyHash()
 	extensionSubkeySmt, err := rpc.GetExtensionSubkeySmt(senderAddr, pubkeyHash, alg.Secp256k1, 1)
 	if err != nil {

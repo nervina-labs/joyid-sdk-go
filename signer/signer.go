@@ -15,9 +15,6 @@ import (
 const (
 	native byte = 1
 	subkey byte = 2
-
-	testnetAggregatorUrl = "http://127.0.0.1:3030"
-	mainnetAggreagtorUrl = "https://cota.nervina.dev/mainnet-aggregator"
 )
 
 type AlgPrivKey struct {
@@ -43,7 +40,7 @@ func SignSubkeyUnlockTx(tx *types.Transaction, algKey AlgPrivKey, webAuthn *WebA
 	return signSecp25k1Tx(tx, key, subkey)
 }
 
-func BuildOutputTypeWithSubkeySmt(tx *types.Transaction, algKey AlgPrivKey, addr *address.Address) error {
+func BuildOutputTypeWithSubkeySmt(tx *types.Transaction, algKey AlgPrivKey, addr *address.Address, indexerUrl string) error {
 	var pubkeyHash []byte
 	if algKey.Alg == alg.Secp256k1 {
 		pubkeyHash = secp256k1.ImportKey(algKey.PrivKey).PubkeyHash()
@@ -51,13 +48,7 @@ func BuildOutputTypeWithSubkeySmt(tx *types.Transaction, algKey AlgPrivKey, addr
 		pubkeyHash = secp256r1.ImportKey(algKey.PrivKey).PubkeyHash()
 	}
 
-	var rpc *aggregator.RPCClient
-	if addr.Network == types.NetworkMain {
-		rpc = aggregator.NewRPCClient(mainnetAggreagtorUrl)
-	} else {
-		rpc = aggregator.NewRPCClient(testnetAggregatorUrl)
-	}
-
+	rpc := aggregator.NewRPCClient(indexerUrl)
 	unlockSmt, err := rpc.GetSubkeyUnlockSmt(addr, pubkeyHash, algKey.Alg)
 	if err != nil {
 		return err
