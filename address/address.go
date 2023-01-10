@@ -9,11 +9,30 @@ import (
 )
 
 const (
-	testnetJoyidCodeHash = "0x07595bf3a836bdb7f93a91a66cb2c8cbaf0d807e8adecddc9d910aac6f0a5d0f"
-	mainnetJoyidCodeHash = "0x07595bf3a836bdb7f93a91a66cb2c8cbaf0d807e8adecddc9d910aac6f0a5d0f"
+	TestnetJoyidCodeHash = "0x07595bf3a836bdb7f93a91a66cb2c8cbaf0d807e8adecddc9d910aac6f0a5d0f"
+	MainnetJoyidCodeHash = "0x07595bf3a836bdb7f93a91a66cb2c8cbaf0d807e8adecddc9d910aac6f0a5d0f"
 )
 
-func FromPubkeyHash(pubkeyHash []byte, algIndex alg.AlgIndex, network types.Network) *address.Address {
+type JoyIDAddress struct {
+	joyidCodeHash string
+	network       types.Network
+}
+
+func NewJoyIDLock(joyidCodeHash string, network types.Network) *JoyIDAddress {
+	return &JoyIDAddress{
+		joyidCodeHash,
+		network,
+	}
+}
+
+func DefaultJoyIDLock() *JoyIDAddress {
+	return &JoyIDAddress{
+		joyidCodeHash: TestnetJoyidCodeHash,
+		network:       types.NetworkTest,
+	}
+}
+
+func (addr *JoyIDAddress) FromPubkeyHash(pubkeyHash []byte, algIndex alg.AlgIndex) *address.Address {
 	var args []byte
 	if algIndex == alg.Secp256r1 {
 		args = []byte{0x00, 0x01}
@@ -22,10 +41,10 @@ func FromPubkeyHash(pubkeyHash []byte, algIndex alg.AlgIndex, network types.Netw
 	}
 	args = append(args, pubkeyHash...)
 	var codeHash string
-	if network == types.NetworkTest {
-		codeHash = testnetJoyidCodeHash
+	if addr.network == types.NetworkTest {
+		codeHash = TestnetJoyidCodeHash
 	} else {
-		codeHash = mainnetJoyidCodeHash
+		codeHash = MainnetJoyidCodeHash
 	}
 	lockScript := &types.Script{
 		CodeHash: types.HexToHash(codeHash),
@@ -34,16 +53,16 @@ func FromPubkeyHash(pubkeyHash []byte, algIndex alg.AlgIndex, network types.Netw
 	}
 	return &address.Address{
 		Script:  lockScript,
-		Network: network,
+		Network: addr.network,
 	}
 }
 
-func FromPrivKey(key string, algIndex alg.AlgIndex, network types.Network) *address.Address {
+func (addr *JoyIDAddress) FromPrivKey(key string, algIndex alg.AlgIndex) *address.Address {
 	var pubkeyHash []byte
 	if algIndex == alg.Secp256k1 {
 		pubkeyHash = secp256k1.ImportKey(key).PubkeyHash()
 	} else {
 		pubkeyHash = secp256r1.ImportKey(key).PubkeyHash()
 	}
-	return FromPubkeyHash(pubkeyHash, algIndex, network)
+	return addr.FromPubkeyHash(pubkeyHash, algIndex)
 }
