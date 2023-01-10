@@ -31,11 +31,11 @@ func main() {
 }
 
 func NativeTransferWithR1() error {
-	senderPrivKey := "4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
+	senderPrivKey := "0x4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
 	sender := "ckt1qqr4jkln4qmtmdle82g6vm9jer967rvq069danwunkgs4tr0pfws7qgqq9sfrkfah2cj79nyp7e6p283ualq8779rsgww3jf"
 	receiver := "ckt1qqr4jkln4qmtmdle82g6vm9jer967rvq069danwunkgs4tr0pfws7qgqq9sfrkfah2cj79nyp7e6p283ualq8779rsgww3jf"
 	network := types.NetworkTest
-	client, err := rpc.Dial("https://testnet.ckb.dev/rpc")
+	client, err := rpc.Dial(testnetCkbNodeUrl)
 	if err != nil {
 		return err
 	}
@@ -84,11 +84,11 @@ func NativeTransferWithR1() error {
 }
 
 func NativeTransferWithK1() error {
-	senderPrivKey := "4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
+	senderPrivKey := "0x4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
 	sender := "ckt1qqr4jkln4qmtmdle82g6vm9jer967rvq069danwunkgs4tr0pfws7qgqqfjsplqwsm75nmmal39jth7k2n4v4t2nlvmef595"
 	receiver := "ckt1qqr4jkln4qmtmdle82g6vm9jer967rvq069danwunkgs4tr0pfws7qgqqfjsplqwsm75nmmal39jth7k2n4v4t2nlvmef595"
 	network := types.NetworkTest
-	client, err := rpc.Dial("https://testnet.ckb.dev/rpc")
+	client, err := rpc.Dial(testnetCkbNodeUrl)
 	if err != nil {
 		return err
 	}
@@ -132,12 +132,12 @@ func NativeTransferWithK1() error {
 }
 
 func SubkeyTransferWithR1() error {
-	// senderPrivKey := "4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
+	// senderPrivKey := "0x4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
 	sender := "ckt1qqr4jkln4qmtmdle82g6vm9jer967rvq069danwunkgs4tr0pfws7qgqq9sfrkfah2cj79nyp7e6p283ualq8779rsgww3jf"
-	senderSubkeyPrivKey := "86f850ed0e871df5abb188355cd6fe00809063c6bdfd822f420f2d0a8a7c985d"
+	senderSubkeyPrivKey := "0x86f850ed0e871df5abb188355cd6fe00809063c6bdfd822f420f2d0a8a7c985d"
 	receiver := "ckt1qqr4jkln4qmtmdle82g6vm9jer967rvq069danwunkgs4tr0pfws7qgqq9sfrkfah2cj79nyp7e6p283ualq8779rsgww3jf"
 	network := types.NetworkTest
-	client, err := rpc.Dial("https://testnet.ckb.dev/rpc")
+	client, err := rpc.Dial(testnetCkbNodeUrl)
 	if err != nil {
 		return err
 	}
@@ -157,7 +157,7 @@ func SubkeyTransferWithR1() error {
 	if err != nil {
 		return err
 	}
-	cotaCellDep, err := utils.CotaCellDep("https://testnet.ckb.dev/indexer", senderAddr)
+	cotaCellDep, err := utils.CotaCellDep(testnetCkbIndexerUrl, senderAddr)
 	if err != nil {
 		return err
 	}
@@ -201,12 +201,12 @@ func SubkeyTransferWithR1() error {
 }
 
 func SubkeyTransferWithK1() error {
-	// senderPrivKey := "4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
+	// senderPrivKey := "0x4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
 	sender := "ckt1qqr4jkln4qmtmdle82g6vm9jer967rvq069danwunkgs4tr0pfws7qgqqfjsplqwsm75nmmal39jth7k2n4v4t2nlvmef595"
-	senderSubkeyPrivKey := "86f850ed0e871df5abb188355cd6fe00809063c6bdfd822f420f2d0a8a7c985d"
+	senderSubkeyPrivKey := "0x86f850ed0e871df5abb188355cd6fe00809063c6bdfd822f420f2d0a8a7c985d"
 	receiver := "ckt1qqr4jkln4qmtmdle82g6vm9jer967rvq069danwunkgs4tr0pfws7qgqqfjsplqwsm75nmmal39jth7k2n4v4t2nlvmef595"
 	network := types.NetworkTest
-	client, err := rpc.Dial("https://testnet.ckb.dev/rpc")
+	client, err := rpc.Dial(testnetCkbNodeUrl)
 	if err != nil {
 		return err
 	}
@@ -226,7 +226,7 @@ func SubkeyTransferWithK1() error {
 	if err != nil {
 		return err
 	}
-	cotaCellDep, err := utils.CotaCellDep("https://testnet.ckb.dev/indexer", senderAddr)
+	cotaCellDep, err := utils.CotaCellDep(testnetCkbIndexerUrl, senderAddr)
 	if err != nil {
 		return err
 	}
@@ -264,11 +264,11 @@ func SubkeyTransferWithK1() error {
 }
 
 func AddSecp256r1SubkeyWithNativeUnlock() error {
-	senderPrivKey := "4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
+	senderPrivKey := "0x4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
 	sender := "ckt1qqr4jkln4qmtmdle82g6vm9jer967rvq069danwunkgs4tr0pfws7qgqq9sfrkfah2cj79nyp7e6p283ualq8779rsgww3jf"
-	senderSubkeyPrivKey := "86f850ed0e871df5abb188355cd6fe00809063c6bdfd822f420f2d0a8a7c985d"
+	senderSubkeyPrivKey := "0x86f850ed0e871df5abb188355cd6fe00809063c6bdfd822f420f2d0a8a7c985d"
 	network := types.NetworkTest
-	client, err := rpc.Dial("https://testnet.ckb.dev/rpc")
+	client, err := rpc.Dial(testnetCkbNodeUrl)
 	if err != nil {
 		return err
 	}
@@ -276,11 +276,11 @@ func AddSecp256r1SubkeyWithNativeUnlock() error {
 	if err != nil {
 		return err
 	}
-	cotaCell, err := utils.GetCotaLiveCell("https://testnet.ckb.dev/indexer", senderAddr)
+	cotaCell, err := utils.GetCotaLiveCell(testnetCkbIndexerUrl, senderAddr)
 	if err != nil {
 		return err
 	}
-	cotaCellDep, err := utils.CotaCellDep("https://testnet.ckb.dev/indexer", senderAddr)
+	cotaCellDep, err := utils.CotaCellDep(testnetCkbIndexerUrl, senderAddr)
 	if err != nil {
 		return err
 	}
@@ -348,11 +348,11 @@ func AddSecp256r1SubkeyWithNativeUnlock() error {
 }
 
 func AddSecp256k1SubkeyWithNativeUnlock() error {
-	senderPrivKey := "4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
+	senderPrivKey := "0x4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
 	sender := "ckt1qqr4jkln4qmtmdle82g6vm9jer967rvq069danwunkgs4tr0pfws7qgqqfjsplqwsm75nmmal39jth7k2n4v4t2nlvmef595"
-	senderSubkeyPrivKey := "86f850ed0e871df5abb188355cd6fe00809063c6bdfd822f420f2d0a8a7c985d"
+	senderSubkeyPrivKey := "0x86f850ed0e871df5abb188355cd6fe00809063c6bdfd822f420f2d0a8a7c985d"
 	network := types.NetworkTest
-	client, err := rpc.Dial("https://testnet.ckb.dev/rpc")
+	client, err := rpc.Dial(testnetCkbNodeUrl)
 	if err != nil {
 		return err
 	}
@@ -360,11 +360,11 @@ func AddSecp256k1SubkeyWithNativeUnlock() error {
 	if err != nil {
 		return err
 	}
-	cotaCell, err := utils.GetCotaLiveCell("https://testnet.ckb.dev/indexer", senderAddr)
+	cotaCell, err := utils.GetCotaLiveCell(testnetCkbIndexerUrl, senderAddr)
 	if err != nil {
 		return err
 	}
-	cotaCellDep, err := utils.CotaCellDep("https://testnet.ckb.dev/indexer", senderAddr)
+	cotaCellDep, err := utils.CotaCellDep(testnetCkbIndexerUrl, senderAddr)
 	if err != nil {
 		return err
 	}
