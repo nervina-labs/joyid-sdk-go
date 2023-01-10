@@ -8,6 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/common/math"
 	"github.com/ethereum/go-ethereum/crypto/secp256k1"
 	"github.com/nervina-labs/joyid-sdk-go/crypto/keccak"
+	"github.com/nervina-labs/joyid-sdk-go/utils"
 )
 
 type Key struct {
@@ -21,7 +22,7 @@ func (k *Key) Bytes() []byte {
 func ImportKey(privKey string) *Key {
 	privateKey := new(ecdsa.PrivateKey)
 	privateKey.Curve = secp256k1.S256()
-	privateKey.D, _ = new(big.Int).SetString(privKey, 16)
+	privateKey.D, _ = new(big.Int).SetString(utils.Trim0x(privKey), 16)
 	return &Key{PrivateKey: privateKey}
 }
 

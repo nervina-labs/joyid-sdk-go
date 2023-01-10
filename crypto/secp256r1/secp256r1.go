@@ -6,6 +6,7 @@ import (
 	"crypto/rand"
 	"math/big"
 
+	"github.com/nervina-labs/joyid-sdk-go/utils"
 	"github.com/nervosnetwork/ckb-sdk-go/v2/crypto/blake2b"
 )
 
@@ -16,7 +17,7 @@ type Key struct {
 func ImportKey(privKey string) *Key {
 	privateKey := new(ecdsa.PrivateKey)
 	privateKey.Curve = elliptic.P256()
-	privateKey.D, _ = new(big.Int).SetString(privKey, 16)
+	privateKey.D, _ = new(big.Int).SetString(utils.Trim0x(privKey), 16)
 	return &Key{PrivateKey: privateKey}
 }
 
