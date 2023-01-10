@@ -30,6 +30,10 @@ func HexToBytes(h string) ([]byte, error) {
 	return hexutil.Decode(fmt.Sprintf("0x%s", h))
 }
 
+func Trim0x(h string) string {
+	return strings.TrimPrefix(h, "0x")
+}
+
 func JoyIDLockCellDep(network types.Network) *types.CellDep {
 	if network == types.NetworkMain {
 		return &types.CellDep{
