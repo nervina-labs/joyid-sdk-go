@@ -45,7 +45,7 @@ func NativeTransferWithR1() error {
 		return err
 	}
 	builder.AddChangeOutputByAddress(sender)
-	builder.AddCellDep(utils.JoyIDLockCellDep(network))
+	builder.AddCellDep(utils.JoyIDLockCellDep(network, nil))
 	txWithGroups, err := builder.Build()
 	if err != nil {
 		return err
@@ -98,7 +98,7 @@ func NativeTransferWithK1() error {
 		return err
 	}
 	builder.AddChangeOutputByAddress(sender)
-	builder.AddCellDep(utils.JoyIDLockCellDep(network))
+	builder.AddCellDep(utils.JoyIDLockCellDep(network, nil))
 	txWithGroups, err := builder.Build()
 	if err != nil {
 		return err
@@ -156,7 +156,7 @@ func SubkeyTransferWithR1() error {
 		return err
 	}
 	builder.AddCellDep(cotaCellDep)
-	builder.AddCellDep(utils.JoyIDLockCellDep(network))
+	builder.AddCellDep(utils.JoyIDLockCellDep(network, nil))
 	txWithGroups, err := builder.Build()
 	if err != nil {
 		return err
@@ -225,7 +225,7 @@ func SubkeyTransferWithK1() error {
 		return err
 	}
 	builder.AddCellDep(cotaCellDep)
-	builder.AddCellDep(utils.JoyIDLockCellDep(network))
+	builder.AddCellDep(utils.JoyIDLockCellDep(network, nil))
 	txWithGroups, err := builder.Build()
 	if err != nil {
 		return err
@@ -316,7 +316,7 @@ func AddSecp256r1SubkeyWithNativeUnlock() error {
 		Inputs:      []*types.CellInput{input},
 		Outputs:     []*types.CellOutput{output},
 		OutputsData: [][]byte{cotaOuputData},
-		CellDeps:    []*types.CellDep{cotaCellDep, utils.JoyIDLockCellDep(network), utils.CotaTypeCellDep(network)},
+		CellDeps:    []*types.CellDep{cotaCellDep, utils.JoyIDLockCellDep(network, nil), utils.CotaTypeCellDep(network)},
 		Witnesses:   [][]byte{witnessArgs.Serialize()},
 	}
 
@@ -400,7 +400,7 @@ func AddSecp256k1SubkeyWithNativeUnlock() error {
 		Inputs:      []*types.CellInput{input},
 		Outputs:     []*types.CellOutput{output},
 		OutputsData: [][]byte{cotaOuputData},
-		CellDeps:    []*types.CellDep{cotaCellDep, utils.JoyIDLockCellDep(network), utils.CotaTypeCellDep(network)},
+		CellDeps:    []*types.CellDep{cotaCellDep, utils.JoyIDLockCellDep(network, nil), utils.CotaTypeCellDep(network)},
 		Witnesses:   [][]byte{witnessArgs.Serialize()},
 	}
 
