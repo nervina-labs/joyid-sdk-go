@@ -30,7 +30,7 @@ func NativeTransferWithK1() error
 
 ### JoyID subkey unlock
 
-Before using subkey to unlock transaction, the CoTA cell should be registerd and the [registry example](https://github.com/nervina-labs/cota-sdk-js/blob/develop/example/registry.ts) may be helpful.
+Before using subkey to unlock transaction, the CoTA cell should be registered and the [registry example](https://github.com/nervina-labs/cota-sdk-js/blob/develop/example/registry.ts) may be helpful.
 
 > The community cota aggregator services may be helpful to develop and they can be seen on [here](https://github.com/nervina-labs/cota-sdk-js#public-aggregator-rpc-url-as-blow-can-be-used-to-develop-and-test)
 
@@ -50,7 +50,7 @@ func SubkeyTransferWithK1() error
 
 ### Add subkey with native unlock
 
-Before adding subkey to JoyID account, the CoTA cell should be registerd and the [registry example](https://github.com/nervina-labs/cota-sdk-js/blob/develop/example/registry.ts) may be helpful.
+Before adding subkey to JoyID account, the CoTA cell should be registered and the [registry example](https://github.com/nervina-labs/cota-sdk-js/blob/develop/example/registry.ts) may be helpful.
 
 > The community cota aggregator services may be helpful to develop and they can be seen on [here](https://github.com/nervina-labs/cota-sdk-js#public-aggregator-rpc-url-as-blow-can-be-used-to-develop-and-test)
 
