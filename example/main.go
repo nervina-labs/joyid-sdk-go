@@ -1,4 +1,4 @@
-package main
+package example
 
 import (
 	"context"
@@ -23,12 +23,6 @@ const (
 	testnetCkbIndexerUrl = "https://testnet.ckb.dev/indexer"
 	testnetAggregatorUrl = "https://cota.nervina.dev/aggregator"
 )
-
-func main() {
-	if err := SubkeyTransferWithK1(); err != nil {
-		fmt.Printf("main error: %v", err)
-	}
-}
 
 func NativeTransferWithR1() error {
 	senderPrivKey := "0x4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
