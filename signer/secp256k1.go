@@ -15,16 +15,7 @@ const (
 )
 
 func signSecp25k1Tx(tx *types.Transaction, key *secp256k1.Key, mode byte) error {
-	// personal hash, ethereum prefix  \u0019Ethereum Signed Message:\n32
-	personalEthereumSignPrefix := [...]byte{
-		0x19, 0x45, 0x74, 0x68, 0x65, 0x72, 0x65, 0x75, 0x6d, 0x20, 0x53, 0x69, 0x67, 0x6e, 0x65, 0x64,
-		0x20, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x3a, 0x0a, 0x33, 0x32,
-	}
-	msg := personalEthereumSignPrefix[:]
-
-	txHash := tx.ComputeHash()
-	msg = append(msg, txHash.Bytes()...)
-
+	buf := tx.ComputeHash().Bytes()
 	witnesses := tx.Witnesses
 	if len(witnesses) < 1 {
 		return errors.New("first witness cannot be empty")
@@ -42,23 +33,32 @@ func signSecp25k1Tx(tx *types.Transaction, key *secp256k1.Key, mode byte) error 
 
 	bytesLen := make([]byte, 8)
 	binary.LittleEndian.PutUint64(bytesLen, uint64(len(emptyWitnessBytes)))
-	msg = append(msg, bytesLen...)
-	msg = append(msg, emptyWitnessBytes...)
+	buf = append(buf, bytesLen...)
+	buf = append(buf, emptyWitnessBytes...)
 
 	for i := 1; i < len(witnesses); i++ {
 		bytes := tx.Witnesses[i]
 		bytesLen := make([]byte, 8)
 		binary.LittleEndian.PutUint64(bytesLen, uint64(len(bytes)))
-		msg = append(msg, bytesLen...)
-		msg = append(msg, bytes...)
+		buf = append(buf, bytesLen...)
+		buf = append(buf, bytes...)
 	}
 
-	msgHash := keccak.Keccak256(msg)
+	sighash := keccak.Keccak256(buf)
 	if err != nil {
 		return err
 	}
 
-	signature := key.Sign(msgHash)
+	// personal hash, ethereum prefix  \u0019Ethereum Signed Message:\n32
+	personalEthereumSignPrefix := [...]byte{
+		0x19, 0x45, 0x74, 0x68, 0x65, 0x72, 0x65, 0x75, 0x6d, 0x20, 0x53, 0x69, 0x67, 0x6e, 0x65, 0x64,
+		0x20, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x3a, 0x0a, 0x33, 0x32,
+	}
+	message := personalEthereumSignPrefix[:]
+	message = append(message, sighash...)
+	messageHash := keccak.Keccak256(message)
+
+	signature := key.Sign(messageHash)
 	_, pubkey := key.Pubkey()
 	pubkeyHash := keccak.Keccak160(pubkey)
 

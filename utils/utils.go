@@ -20,8 +20,8 @@ const (
 	mainnetCotaTypeCodeHash = "0x1122a4fb54697cf2e6e3a96c9d80fd398a936559b90954c6e88eb7ba0cf652df"
 	mainnetCotaTxHash       = "0x875db3381ebe7a730676c110e1c0d78ae1bdd0c11beacb7db4db08e368c2cd95"
 
-	testnetJoyidLockTxHash = "0x25f43b313d2652681cfa52a071efe29507f939b7137d06f149ae3c3026dc10c9"
-	mainnetJoyidLockTxHash = "0x25f43b313d2652681cfa52a071efe29507f939b7137d06f149ae3c3026dc10c9"
+	testnetJoyidLockTxHash = "0x68777db22145ce8e55014cbfd0d52e7357068451ea539ac7df952a36a9696f02"
+	mainnetJoyidLockTxHash = "0x68777db22145ce8e55014cbfd0d52e7357068451ea539ac7df952a36a9696f02"
 )
 
 // BytesToHex encodes b as a hex string without 0x prefix.
