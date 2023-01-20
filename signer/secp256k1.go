@@ -14,7 +14,7 @@ const (
 	secp256k1EmptyWitnessLockLen = 86
 )
 
-func signSecp25k1Tx(tx *types.Transaction, key *secp256k1.Key, mode byte) error {
+func signSecp256k1Tx(tx *types.Transaction, key *secp256k1.Key, mode byte) error {
 	buf := tx.ComputeHash().Bytes()
 	witnesses := tx.Witnesses
 	if len(witnesses) < 1 {
@@ -59,8 +59,7 @@ func signSecp25k1Tx(tx *types.Transaction, key *secp256k1.Key, mode byte) error 
 	messageHash := keccak.Keccak256(message)
 
 	signature := key.Sign(messageHash)
-	_, pubkey := key.Pubkey()
-	pubkeyHash := keccak.Keccak160(pubkey)
+	pubkeyHash := key.PubkeyHash()
 
 	witnessArgsLock := []byte{mode}
 	witnessArgsLock = append(witnessArgsLock, pubkeyHash...)
