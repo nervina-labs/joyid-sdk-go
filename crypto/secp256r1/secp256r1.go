@@ -33,8 +33,9 @@ func (key *Key) Pubkey() (*ecdsa.PublicKey, []byte) {
 	pubkey := key.PrivateKey.PublicKey
 	pubkey.Curve = elliptic.P256()
 	pubkey.X, pubkey.Y = pubkey.Curve.ScalarBaseMult(key.PrivateKey.D.Bytes())
-	pubkeyBytes := pubkey.X.Bytes()
-	pubkeyBytes = append(pubkeyBytes, pubkey.Y.Bytes()...)
+	pubkeyBytes := make([]byte, 64)
+	copy(pubkeyBytes[32-len(pubkey.X.Bytes()):32], pubkey.X.Bytes())
+	copy(pubkeyBytes[64-len(pubkey.Y.Bytes()):64], pubkey.Y.Bytes())
 	return &pubkey, pubkeyBytes
 }
 

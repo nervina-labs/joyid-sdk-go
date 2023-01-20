@@ -38,8 +38,9 @@ func (key *Key) Pubkey() (*ecdsa.PublicKey, []byte) {
 	pubkey := key.PrivateKey.PublicKey
 	pubkey.Curve = secp256k1.S256()
 	pubkey.X, pubkey.Y = pubkey.Curve.ScalarBaseMult(key.PrivateKey.D.Bytes())
-	pubkeyBytes := pubkey.X.Bytes()
-	pubkeyBytes = append(pubkeyBytes, pubkey.Y.Bytes()...)
+	pubkeyBytes := make([]byte, 64)
+	copy(pubkeyBytes[32-len(pubkey.X.Bytes()):32], pubkey.X.Bytes())
+	copy(pubkeyBytes[64-len(pubkey.Y.Bytes()):64], pubkey.Y.Bytes())
 	return &pubkey, pubkeyBytes
 }
 
@@ -54,4 +55,12 @@ func (key *Key) Sign(message []byte) []byte {
 		return []byte{}
 	}
 	return sig
+}
+
+func (key *Key) RecoverPubkey(message []byte, sig []byte) []byte {
+	pubkey, err := secp256k1.RecoverPubkey(message, sig)
+	if err != nil {
+		return []byte{}
+	}
+	return pubkey
 }
