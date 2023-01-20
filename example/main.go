@@ -261,6 +261,8 @@ func AddSecp256r1SubkeyWithNativeUnlock() error {
 	senderPrivKey := "0x4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
 	sender := "ckt1qqr4jkln4qmtmdle82g6vm9jer967rvq069danwunkgs4tr0pfws7qgqq9sfrkfah2cj79nyp7e6p283ualq8779rsgww3jf"
 	senderSubkeyPrivKey := "0x86f850ed0e871df5abb188355cd6fe00809063c6bdfd822f420f2d0a8a7c985d"
+	// extData must be unique for each subkey
+	var extData uint32 = 1
 	network := types.NetworkTest
 	client, err := rpc.Dial(testnetCkbNodeUrl)
 	if err != nil {
@@ -291,7 +293,7 @@ func AddSecp256r1SubkeyWithNativeUnlock() error {
 
 	rpc := aggregator.NewRPCClient(testnetAggregatorUrl)
 	pubkeyHash := secp256r1.ImportKey(senderSubkeyPrivKey).PubkeyHash()
-	extensionSubkeySmt, err := rpc.GetExtensionSubkeySmt(senderAddr, pubkeyHash, alg.Secp256r1, 1)
+	extensionSubkeySmt, err := rpc.GetExtensionSubkeySmt(senderAddr, pubkeyHash, alg.Secp256r1, extData)
 	if err != nil {
 		return err
 	}
@@ -345,6 +347,8 @@ func AddSecp256k1SubkeyWithNativeUnlock() error {
 	senderPrivKey := "0x4271c23380932c74a041b4f56779e5ef60e808a127825875f906260f1f657761"
 	sender := "ckt1qqr4jkln4qmtmdle82g6vm9jer967rvq069danwunkgs4tr0pfws7qgqqfjsplqwsm75nmmal39jth7k2n4v4t2nlvmef595"
 	senderSubkeyPrivKey := "0x86f850ed0e871df5abb188355cd6fe00809063c6bdfd822f420f2d0a8a7c985d"
+	// extData must be unique for each subkey
+	var extData uint32 = 1
 	network := types.NetworkTest
 	client, err := rpc.Dial(testnetCkbNodeUrl)
 	if err != nil {
@@ -375,7 +379,8 @@ func AddSecp256k1SubkeyWithNativeUnlock() error {
 
 	rpc := aggregator.NewRPCClient(testnetAggregatorUrl)
 	pubkeyHash := secp256k1.ImportKey(senderSubkeyPrivKey).PubkeyHash()
-	extensionSubkeySmt, err := rpc.GetExtensionSubkeySmt(senderAddr, pubkeyHash, alg.Secp256k1, 1)
+
+	extensionSubkeySmt, err := rpc.GetExtensionSubkeySmt(senderAddr, pubkeyHash, alg.Secp256k1, extData)
 	if err != nil {
 		return err
 	}
