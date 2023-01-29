@@ -6,12 +6,17 @@ import (
 	"crypto/rand"
 	"math/big"
 
+	"github.com/ethereum/go-ethereum/common/math"
 	"github.com/nervina-labs/joyid-sdk-go/utils"
 	"github.com/nervosnetwork/ckb-sdk-go/v2/crypto/blake2b"
 )
 
 type Key struct {
 	PrivateKey *ecdsa.PrivateKey
+}
+
+func (k *Key) Bytes() []byte {
+	return math.PaddedBigBytes(k.PrivateKey.D, k.PrivateKey.Params().BitSize/8)
 }
 
 func ImportKey(privKey string) *Key {
